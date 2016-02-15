@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;bugrap&quot;}">
+  <meta charset="UTF-8" name="package-mapping" content="com_example_bugrap_components:com.example.bugrap.components">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout size-full="true"> 
+   <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" width-full="true" margin="true"> 
+    <vaadin-combo-box style-name="borderless" item-caption-mode="id" width-full="true" :expand="0.5"> 
+     <option>Option 1</option> 
+     <option>Option 2</option> 
+     <option>Option 3</option> 
+    </vaadin-combo-box> 
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="vertical-line" spacing="true" :middle="" :right="" :expand="0.5"> 
+     <vaadin-button icon="fonticon://FontAwesome/f007" style-name="borderless" plain-text="" :middle="">
+       Mark Manager 
+     </vaadin-button> 
+     <vaadin-button icon="fonticon://FontAwesome/f084" style-name="borderless" plain-text="" :middle="" :right="">
+       Logout 
+     </vaadin-button> 
+    </vaadin-horizontal-layout> 
+   </vaadin-horizontal-layout> 
+   <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" width-full="true" margin="true"> 
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" :expand="3"> 
+     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="vertical-line" spacing="true"> 
+      <vaadin-button icon="fonticon://FontAwesome/f188" style-name="borderless" plain-text="">
+        Report a bug 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f0eb" style-name="borderless" plain-text="">
+        Request a feature 
+      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f013" style-name="borderless" plain-text="">
+        Manage project 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+     <vaadin-label style-name="projects-info" size-auto="true" plain-text="" :middle="">
+       123 
+     </vaadin-label> 
+    </vaadin-horizontal-layout> 
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" width-full="true" :middle="" :right="" :expand="2"> 
+     <vaadin-button icon="fonticon://FontAwesome/f002" style-name="borderless icon-only" plain-text="">
+       Button 
+     </vaadin-button> 
+     <vaadin-text-field description="" style-name="borderless" width-full="true" value="Search reports..." :expand=""></vaadin-text-field> 
+     <vaadin-button style-name="borderless" plain-text="">
+       X 
+     </vaadin-button> 
+    </vaadin-horizontal-layout> 
+   </vaadin-horizontal-layout> 
+   <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" width-full="true" margin="true"> 
+    <vaadin-label size-auto="true" plain-text="">
+      Reports for 
+    </vaadin-label> 
+    <vaadin-native-select item-caption-mode="id" immediate="true"> 
+     <option>Option 1</option> 
+     <option>Option 2</option> 
+     <option>Option 3</option> 
+    </vaadin-native-select> 
+    <com_example_bugrap_components-distribution-bar width-full="true" _id="distributionBar" :middle="" :right="" :expand=""></com_example_bugrap_components-distribution-bar> 
+   </vaadin-horizontal-layout> 
+   <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" margin="true"> 
+    <vaadin-label size-auto="true" plain-text="" :middle="">
+      Assigness 
+    </vaadin-label> 
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="v-component-group"> 
+     <vaadin-button plain-text="">
+       Only me 
+     </vaadin-button> 
+     <vaadin-button plain-text="">
+       Everyone 
+     </vaadin-button> 
+    </vaadin-horizontal-layout> 
+    <vaadin-label size-auto="true" plain-text="" :middle="">
+      Status 
+    </vaadin-label> 
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="v-component-group"> 
+     <vaadin-button plain-text="">
+       Open 
+     </vaadin-button> 
+     <vaadin-button plain-text="">
+       All kinds 
+     </vaadin-button> 
+     <vaadin-menu-bar plain-text=""></vaadin-menu-bar> 
+    </vaadin-horizontal-layout> 
+   </vaadin-horizontal-layout> 
+   <vaadin-vertical-split-panel split-position="100%" _id="tableLayout" :expand=""> 
+    <vaadin-table size-full="true" _id="bugsTable"></vaadin-table> 
+   </vaadin-vertical-split-panel> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;bugrap&quot;}">
+  <meta charset="UTF-8" name="package-mapping" content="com_example_bugrap_views:com.example.bugrap.views">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout size-full="true"> 
+   <vaadin-horizontal-layout primary-style-name="v-horizontallayout" width-full="true" margin="true"> 
+    <vaadin-label size-auto="true" plain-text="" :middle="">
+      Label 
+    </vaadin-label> 
+   </vaadin-horizontal-layout> 
+   <com_example_bugrap_views-feature-description-layout size-full="true" :expand=""></com_example_bugrap_views-feature-description-layout> 
+   <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="gray" spacing="true" margin="true"> 
+    <vaadin-text-area width-full="true">
+      Write a new comment... 
+    </vaadin-text-area> 
+    <vaadin-css-layout style-name="upload-area" width-full="true"></vaadin-css-layout> 
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true"> 
+     <vaadin-button plain-text="">
+       Done 
+     </vaadin-button> 
+     <vaadin-button plain-text="">
+       Attachment... 
+     </vaadin-button> 
+     <vaadin-button plain-text="">
+       Cansel 
+     </vaadin-button> 
+    </vaadin-horizontal-layout> 
+   </vaadin-vertical-layout> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

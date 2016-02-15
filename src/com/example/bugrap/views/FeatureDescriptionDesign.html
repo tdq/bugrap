@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;bugrap&quot;}">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout size-full="true"> 
+   <vaadin-panel style-name="gray"> 
+    <vaadin-vertical-layout primary-style-name="v-verticallayout" spacing="true" margin="true"> 
+     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true"> 
+      <vaadin-button icon="fonticon://FontAwesome/f065" style-name="borderless" plain-text="" _id="expandFeature"></vaadin-button> 
+      <vaadin-label size-auto="true" plain-text="" :middle="">
+        Feature name 
+      </vaadin-label> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true"> 
+      <vaadin-native-select caption="Priority" item-caption-mode="id"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-native-select> 
+      <vaadin-native-select caption="Type" item-caption-mode="id"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-native-select> 
+      <vaadin-native-select caption="Status" item-caption-mode="id"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-native-select> 
+      <vaadin-native-select caption="Assigned to" item-caption-mode="id"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-native-select> 
+      <vaadin-native-select caption="Version" item-caption-mode="id"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-native-select> 
+      <vaadin-button plain-text="" :bottom="" :center="">
+        Update 
+      </vaadin-button> 
+      <vaadin-button plain-text="" :bottom="" :center="">
+        Revert 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+    </vaadin-vertical-layout> 
+   </vaadin-panel> 
+   <vaadin-text-area size-full="true" :expand=""></vaadin-text-area> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

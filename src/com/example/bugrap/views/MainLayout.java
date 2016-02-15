@@ -1,0 +1,39 @@
+package com.example.bugrap.views;
+
+import com.vaadin.shared.MouseEventDetails.MouseButton;
+
+@SuppressWarnings("serial")
+public class MainLayout extends MainPageDesign {
+	public MainLayout() {
+		distributionBar.setClosedAmount(5);
+		distributionBar.setNonResolvedAmount(15);
+		distributionBar.setUnassignedAmount(180);
+		
+		bugsTable.setSelectable(true);
+		bugsTable.setImmediate(true);
+		
+		bugsTable.addContainerProperty("Priority", Integer.class, 0);
+		bugsTable.addContainerProperty("Type", String.class, null);
+		bugsTable.addContainerProperty("Summary", String.class, null);
+		bugsTable.addContainerProperty("Assigned to", String.class, null);
+		bugsTable.addContainerProperty("Last modified", String.class, null);
+		bugsTable.addContainerProperty("Reported", String.class, null);
+		
+		bugsTable.addItem(new Object[]{5, "Bug", "Panel child component hierarchy is invalid", "Marc Manager", null, "15 mins ago"}, 1);
+		
+		bugsTable.setVisibleColumns(new Object[]{"Priority", "Type", "Summary", "Assigned to", "Last modified", "Reported"});
+		bugsTable.setColumnHeaders(new String[]{"Priority", "Type", "Summary", "Assigned to", "Last modified", "Reported"});
+		
+		bugsTable.addItemClickListener((event) -> {
+			if(event.getButton() == MouseButton.LEFT && event.isDoubleClick() == false) {
+				final FeatureDescriptionLayout featureDescription = new FeatureDescriptionLayout();
+				
+				tableLayout.setSecondComponent(featureDescription);
+				tableLayout.setSplitPosition(50f);
+			} else if(event.isDoubleClick()) {
+				final FeatureDescriptionLayout featureDescription = new FeatureDescriptionLayout();
+				featureDescription.openInWindow();
+			}
+		});
+	}
+}
