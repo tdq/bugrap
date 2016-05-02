@@ -2,8 +2,9 @@ package com.example.bugrap;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.example.bugrap.views.FeatureDescriptionLayout;
+import com.example.bugrap.controllers.ReportsController;
 import com.example.bugrap.views.MainLayout;
+import com.example.bugrap.views.ReportPageView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
@@ -26,8 +27,10 @@ public class BugrapUI extends UI {
 	protected void init(VaadinRequest request) {
 		getPage().setTitle("BugRap");
 		
-		Navigator navigator = new Navigator(this, this);		
-		navigator.addView("", new MainLayout());
-		navigator.addView("bug_report", new FeatureDescriptionLayout());
+		Navigator navigator = new Navigator(this, this);
+		ReportsController reportsController = new ReportsController(navigator);
+		
+		navigator.addView("", new MainLayout(reportsController));
+		navigator.addView("report", new ReportPageView());
 	}
 }

@@ -7,25 +7,23 @@
  <body> 
   <vaadin-vertical-layout size-full="true"> 
    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" width-full="true" margin="true"> 
-    <vaadin-label size-auto="true" plain-text="" :middle="">
+    <vaadin-label size-auto="true" plain-text="" _id="breadcrums" :middle="">
       Label 
     </vaadin-label> 
    </vaadin-horizontal-layout> 
-   <com_example_bugrap_views-feature-description-layout size-full="true" :expand=""></com_example_bugrap_views-feature-description-layout> 
+   <com_example_bugrap_views-feature-description-layout size-full="true" _id="featureDescription" :expand=""></com_example_bugrap_views-feature-description-layout> 
    <vaadin-vertical-layout primary-style-name="v-verticallayout" style-name="gray" spacing="true" margin="true"> 
     <vaadin-text-area width-full="true">
       Write a new comment... 
     </vaadin-text-area> 
-    <vaadin-css-layout style-name="upload-area" width-full="true"></vaadin-css-layout> 
+    <vaadin-horizontal-layout visible="false" primary-style-name="v-horizontallayout" style-name="upload-area" spacing="true" width-full="true" _id="uploadsContainer"></vaadin-horizontal-layout> 
     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true"> 
-     <vaadin-button plain-text="">
+     <vaadin-button plain-text="" _id="doneButton">
        Done 
      </vaadin-button> 
-     <vaadin-button plain-text="">
-       Attachment... 
-     </vaadin-button> 
-     <vaadin-button plain-text="">
-       Cansel 
+     <vaadin-upload immediate="true" _id="attachmentButton"></vaadin-upload> 
+     <vaadin-button enabled="false" plain-text="" _id="cancelButton">
+       Cancel 
      </vaadin-button> 
     </vaadin-horizontal-layout> 
    </vaadin-vertical-layout> 

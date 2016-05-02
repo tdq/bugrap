@@ -1,5 +1,6 @@
 package com.example.bugrap.views;
 
+import com.example.bugrap.controllers.ReportsController;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.UI;
@@ -12,29 +13,49 @@ import com.vaadin.ui.Window;
  */
 @SuppressWarnings("serial")
 public class FeatureDescriptionLayout extends FeatureDescriptionDesign implements View {
-	public FeatureDescriptionLayout() {
-		expandFeature.addClickListener((event) -> {
-			openInWindow();
-		});
+	
+	private ReportsController controller;
+	private ExpandListener expandListener;
+	
+	/**
+	 * 
+	 * @author nikolaigorokhov
+	 *
+	 */
+	public interface ExpandListener {
+		public void onExpand();
 	}
-
+	
 	/**
 	 * 
 	 */
-	public void openInWindow() {
-		final Window expandedFeature = new Window();
-		expandedFeature.setContent(this);
-		expandedFeature.setModal(true);
-		expandedFeature.setWidth("70%");
-		expandedFeature.setHeight("70%");
-		expandFeature.setEnabled(false);
+	public FeatureDescriptionLayout() {
+		expandFeature.addClickListener((event) -> {
+			if(expandListener != null)
+				expandListener.onExpand();
+		});
 		
-		UI.getCurrent().addWindow(expandedFeature);
+		expandFeature.setVisible(false);
+	}
+	
+	/**
+	 * 
+	 * @param listener
+	 */
+	public void setExpandListener(ExpandListener listener) {
+		this.expandListener = listener;
 	}
 
 	@Override
 	public void enter(ViewChangeEvent event) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	/**
+	 * 
+	 */
+	public void integratedView() {
+		expandFeature.setVisible(true);
 	}
 }

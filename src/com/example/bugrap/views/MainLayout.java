@@ -1,12 +1,18 @@
 package com.example.bugrap.views;
 
+import com.example.bugrap.controllers.ReportsController;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
 
 @SuppressWarnings("serial")
 public class MainLayout extends MainPageDesign implements View {
-	public MainLayout() {
+	
+	private ReportsController controller;
+	
+	public MainLayout(ReportsController controller) {
+		this.controller = controller;
+	
 		distributionBar.setClosedAmount(5);
 		distributionBar.setNonResolvedAmount(15);
 		distributionBar.setUnassignedAmount(180);
@@ -30,13 +36,14 @@ public class MainLayout extends MainPageDesign implements View {
 		bugsTable.addItemClickListener((event) -> {
 			if(event.getButton() == MouseButton.LEFT && event.isDoubleClick() == false) {
 				final FeatureDescriptionLayout featureDescription = new FeatureDescriptionLayout();
-				
+				featureDescription.integratedView();
+				featureDescription.setExpandListener(controller::openDescription);
+
 				tableLayout.setSecondComponent(featureDescription);
 				tableLayout.setSplitPosition(50f);
 			} else if(event.isDoubleClick()) {
-				final FeatureDescriptionLayout featureDescription = new FeatureDescriptionLayout();
-				featureDescription.openInWindow();
 				tableLayout.setSplitPosition(100f);
+				controller.openDescription();
 			}
 		});
 	}
