@@ -1,9 +1,11 @@
 package com.example.bugrap.views;
 
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
 
 @SuppressWarnings("serial")
-public class MainLayout extends MainPageDesign {
+public class MainLayout extends MainPageDesign implements View {
 	public MainLayout() {
 		distributionBar.setClosedAmount(5);
 		distributionBar.setNonResolvedAmount(15);
@@ -12,6 +14,7 @@ public class MainLayout extends MainPageDesign {
 		bugsTable.setSelectable(true);
 		bugsTable.setImmediate(true);
 		
+		bugsTable.addContainerProperty("Version", String.class, null);
 		bugsTable.addContainerProperty("Priority", Integer.class, 0);
 		bugsTable.addContainerProperty("Type", String.class, null);
 		bugsTable.addContainerProperty("Summary", String.class, null);
@@ -19,10 +22,10 @@ public class MainLayout extends MainPageDesign {
 		bugsTable.addContainerProperty("Last modified", String.class, null);
 		bugsTable.addContainerProperty("Reported", String.class, null);
 		
-		bugsTable.addItem(new Object[]{5, "Bug", "Panel child component hierarchy is invalid", "Marc Manager", null, "15 mins ago"}, 1);
+		bugsTable.addItem(new Object[]{"1.2.3-pre12", 5, "Bug", "Panel child component hierarchy is invalid", "Marc Manager", null, "15 mins ago"}, 1);
 		
-		bugsTable.setVisibleColumns(new Object[]{"Priority", "Type", "Summary", "Assigned to", "Last modified", "Reported"});
-		bugsTable.setColumnHeaders(new String[]{"Priority", "Type", "Summary", "Assigned to", "Last modified", "Reported"});
+		bugsTable.setVisibleColumns(new Object[]{"Version", "Priority", "Type", "Summary", "Assigned to", "Last modified", "Reported"});
+		bugsTable.setColumnHeaders(new String[]{"Version", "Priority", "Type", "Summary", "Assigned to", "Last modified", "Reported"});
 		
 		bugsTable.addItemClickListener((event) -> {
 			if(event.getButton() == MouseButton.LEFT && event.isDoubleClick() == false) {
@@ -33,7 +36,13 @@ public class MainLayout extends MainPageDesign {
 			} else if(event.isDoubleClick()) {
 				final FeatureDescriptionLayout featureDescription = new FeatureDescriptionLayout();
 				featureDescription.openInWindow();
+				tableLayout.setSplitPosition(100f);
 			}
 		});
+	}
+
+	@Override
+	public void enter(ViewChangeEvent event) {
+		// TODO Auto-generated method stub
 	}
 }
