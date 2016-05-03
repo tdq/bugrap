@@ -7,16 +7,16 @@
  <body> 
   <vaadin-vertical-layout size-full="true"> 
    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" width-full="true" margin="true"> 
-    <vaadin-combo-box style-name="borderless" item-caption-mode="id" width-full="true" :expand="0.5"> 
+    <vaadin-combo-box style-name="borderless" item-caption-mode="id" width-full="true" _id="projects" :expand="0.5"> 
      <option>Option 1</option> 
      <option>Option 2</option> 
      <option>Option 3</option> 
     </vaadin-combo-box> 
     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="vertical-line" spacing="true" :middle="" :right="" :expand="0.5"> 
-     <vaadin-button icon="fonticon://FontAwesome/f007" style-name="borderless" plain-text="" :middle="">
+     <vaadin-button icon="fonticon://FontAwesome/f007" style-name="borderless" plain-text="" _id="userButton" :middle="">
        Mark Manager 
      </vaadin-button> 
-     <vaadin-button icon="fonticon://FontAwesome/f084" style-name="borderless" plain-text="" :middle="" :right="">
+     <vaadin-button icon="fonticon://FontAwesome/f084" style-name="borderless" plain-text="" _id="logoutButton" :middle="" :right="">
        Logout 
      </vaadin-button> 
     </vaadin-horizontal-layout> 
@@ -52,7 +52,7 @@
     <vaadin-label size-auto="true" plain-text="">
       Reports for 
     </vaadin-label> 
-    <vaadin-native-select style-name="borderless" item-caption-mode="id" immediate="true"> 
+    <vaadin-native-select style-name="borderless" item-caption-mode="id" immediate="true" _id="versions"> 
      <option>Option 1</option> 
      <option>Option 2</option> 
      <option>Option 3</option> 

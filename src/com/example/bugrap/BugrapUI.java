@@ -3,7 +3,7 @@ package com.example.bugrap;
 import javax.servlet.annotation.WebServlet;
 
 import com.example.bugrap.controllers.ReportsController;
-import com.example.bugrap.views.MainLayout;
+import com.example.bugrap.views.MainView;
 import com.example.bugrap.views.ReportPageView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -30,7 +30,7 @@ public class BugrapUI extends UI {
 		Navigator navigator = new Navigator(this, this);
 		ReportsController reportsController = new ReportsController(navigator);
 		
-		navigator.addView("", new MainLayout(reportsController));
+		navigator.addView("", new MainView(reportsController));
 		navigator.addView("report", new ReportPageView());
 	}
 }
