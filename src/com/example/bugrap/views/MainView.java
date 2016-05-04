@@ -10,6 +10,9 @@ import com.example.bugrap.model.Project;
 import com.example.bugrap.model.Task;
 import com.example.bugrap.model.User;
 import com.example.bugrap.model.Version;
+import com.vaadin.data.Item;
+import com.vaadin.data.util.BeanContainer;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.navigator.View;
@@ -27,6 +30,7 @@ public class MainView extends MainPageDesign implements View {
 	private ReportsController controller;
 	private int currentVersionId;
 	private Project currentProject;
+	private BeanContainer<Integer, Task> container = new BeanContainer<>(Task.class);
 	
 	/**
 	 * 
@@ -41,41 +45,57 @@ public class MainView extends MainPageDesign implements View {
 		bugsTable.setImmediate(true);
 		bugsTable.setMultiSelect(true);
 		
-		bugsTable.addContainerProperty("version", String.class, null);
-		bugsTable.addContainerProperty("priority", Integer.class, 0);
-		bugsTable.addContainerProperty("type", String.class, null);
-		bugsTable.addContainerProperty("summary", String.class, null);
-		bugsTable.addContainerProperty("assigned to", String.class, null);
-		bugsTable.addContainerProperty("last modified", String.class, null);
-		bugsTable.addContainerProperty("reported", String.class, null);
-		
-		setUser();
-		
 		bugsTable.addItemClickListener((event) -> {
-			Set<Integer> tasks = getSelectedTasks();
-			tasks.add((Integer) event.getItemId());
-			
-			if(event.getButton() == MouseButton.LEFT && event.isDoubleClick() == false) {
-				final FeatureDescriptionView featureDescription = new FeatureDescriptionView();
-				featureDescription.integratedView();
-				featureDescription.setExpandListener(() -> controller.openTaskDescription(tasks));
-				featureDescription.setTasks(tasks, currentProject.getId());
-
-				tableLayout.setSecondComponent(featureDescription);
-				tableLayout.setSplitPosition(50f);
-			} else if(event.isDoubleClick()) {
+			if(event.getButton() == MouseButton.LEFT && event.isDoubleClick()) {
 				tableLayout.setSplitPosition(100f);
-				controller.openTaskDescription(tasks);
+				controller.openTaskDescription((int) event.getItemId());
 			}
+		});
+		
+		bugsTable.addValueChangeListener(event -> {
+			Set<Integer> tasks = (Set<Integer>) bugsTable.getValue();
+			
+			if(tasks == null || tasks.isEmpty())
+				return;
+			
+			final FeatureDescriptionView featureDescription = new FeatureDescriptionView();
+			featureDescription.integratedView();
+			featureDescription.setTasks(tasks, currentProject.getId());
+			featureDescription.setUpdateTasksListener(updatedTasks -> {
+				updatedTasks.forEach(updated -> {
+					Item item = bugsTable.getItem(updated.getId());
+					item.getItemProperty("priority").setValue(updated.getPriority());
+					item.getItemProperty("type").setValue(updated.getType());
+					item.getItemProperty("summary").setValue(updated.getSummary());
+					item.getItemProperty("user").setValue(updated.getUser());
+					item.getItemProperty("lastModified").setValue(updated.getLastModified());
+					item.getItemProperty("reported").setValue(updated.getReported());
+					
+					if(item.getItemProperty("version") != null)
+						item.getItemProperty("version").setValue(updated.getVersion());
+				});
+				
+				setDistribution(currentProject.getId());
+			});
+			
+			if(tasks.size() == 1)
+				featureDescription.setExpandListener(() -> controller.openTaskDescription(tasks.iterator().next()));
+
+			tableLayout.setSecondComponent(featureDescription);
+			tableLayout.setSplitPosition(50f);
 		});
 		
 		bugsTable.addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
 			
 			@Override
 			public void handleAction(Object sender, Object target) {
-				Set<Integer> tasks = getSelectedTasks();
+				Set<Integer> tasks = (Set<Integer>) bugsTable.getValue();
+				
+				if(tasks == null || tasks.isEmpty())
+					return;
+				
 				tableLayout.setSplitPosition(100f);
-				controller.openTaskDescription(tasks);
+				controller.openTaskDescription(tasks.iterator().next());
 			}
 		});
 		
@@ -168,45 +188,27 @@ public class MainView extends MainPageDesign implements View {
 	private void setBugTableDataSource(int projectId, int currentVersionId) {
 		List<Task> tasks = controller.getTasks(projectId, currentVersionId);
 		
-		bugsTable.removeAllItems();
+		container.setBeanIdProperty("id");
+		bugsTable.setContainerDataSource(container);
+		
+		//bugsTable.removeAllItems();
 		tableLayout.setSplitPosition(100f);
 		
 		if(currentVersionId == 0) {
-			bugsTable.setVisibleColumns(new Object[]{"version", "priority", "type", "summary", "assigned to", "last modified", "reported"});
+			bugsTable.setVisibleColumns(new Object[]{"version", "priority", "type", "summary", "user", "lastModified", "reported"});
 			bugsTable.setColumnHeaders(new String[]{"Version", "Priority", "Type", "Summary", "Assigned to", "Last modified", "Reported"});
-			
-			tasks.forEach(task -> bugsTable.addItem(
-				new Object[] {
-					task.getVersion().getName(), 
-					task.getPriority(), 
-					task.getType().getName(), 
-					task.getSummary(), 
-					task.getUser().getName(), 
-					task.getLastModified(), 
-					task.getReported()
-				}, 
-				task.getId()
-			));
 		} else {
-			bugsTable.setVisibleColumns(new Object[]{"priority", "type", "summary", "assigned to", "last modified", "reported"});
+			bugsTable.setVisibleColumns(new Object[]{"priority", "type", "summary", "user", "lastModified", "reported"});
 			bugsTable.setColumnHeaders(new String[]{"Priority", "Type", "Summary", "Assigned to", "Last modified", "Reported"});
-			
-			tasks.forEach(task -> bugsTable.addItem(
-				new Object[] {
-					task.getPriority(), 
-					task.getType().getName(), 
-					task.getSummary(), 
-					task.getUser().getName(), 
-					task.getLastModified(), 
-					task.getReported()
-				}, 
-				task.getId()
-			));
 		}
+		
+		container.removeAllItems();
+		container.addAll(tasks);
 	}
 
 	@Override
 	public void enter(ViewChangeEvent event) {
 		// TODO Auto-generated method stub
+		setUser();
 	}
 }

@@ -35,8 +35,8 @@ public class ReportsController {
 	 * @param tasks 
 	 * 
 	 */
-	public void openTaskDescription(Set<Integer> tasks) {
-		navigator.navigateTo("report");
+	public void openTaskDescription(int taskId) {
+		navigator.navigateTo("report/"+taskId);
 	}
 
 	/**
@@ -112,14 +112,39 @@ public class ReportsController {
 	}
 
 	public Task getAvgTask(Set<Integer> tasks) {
-		Task res = new Task();
+		Task res = null;
 		
 		Iterator<Task> iter = Model.getTasks().stream().filter(task -> tasks.contains(task.getId())).iterator();
 		while(iter.hasNext()) {
 			Task task = iter.next();
 			
-			// TODO
-			return task;
+			if(res == null) {
+				res = new Task(task.getId(), 
+								task.getVersion(), 
+								task.getPriority(), 
+								task.getType(), 
+								task.getSummary(), 
+								task.getUser(), 
+								task.getLastModified(), 
+								task.getReported());
+				res.setComments(task.getComments());
+				res.setProject(task.getProject());
+				res.setStatus(task.getStatus());
+				continue;
+			} else {
+				res.setId(0);
+			}
+			
+			if(res.getPriority() != task.getPriority())
+				res.setPriority(0);
+			if(res.getType() != null && res.getType().equals(task.getType()) == false)
+				res.setType(null);
+			if(res.getStatus() != null && res.getStatus().equals(task.getStatus()) == false)
+				res.setStatus(null);
+			if(res.getUser() != null && res.getUser().equals(task.getUser()) == false)
+				res.setUser(null);
+			if(res.getVersion() != null && res.getVersion().equals(task.getVersion()) == false)
+				res.setVersion(null);
 		}
 		
 		return res;
@@ -135,5 +160,13 @@ public class ReportsController {
 
 	public List<Status> getStatuses() {
 		return Model.getStatuses();
+	}
+
+	public Task getTask(int taskId) {
+		return Model.getTasks().stream().filter(task -> task.getId() == taskId).findFirst().orElse(null);
+	}
+
+	public List<Task> getTasks(Set<Integer> currentTasks) {
+		return Model.getTasks().stream().filter(task -> currentTasks.contains(task.getId())).collect(Collectors.toList());
 	}
 }

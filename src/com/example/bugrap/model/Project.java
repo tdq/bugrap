@@ -1,13 +1,19 @@
 package com.example.bugrap.model;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author nikolaigorokhov
  *
  */
-public class Project {
+public class Project implements Serializable {
 	private int id;
 	private String name;
+	
+	public Project() {
+		
+	}
 	
 	public Project(int id, String name) {
 		this.id = id;
@@ -17,9 +23,22 @@ public class Project {
 	public int getId() {
 		return id;
 	}
-	
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public int hashCode() {
+		return id;
 	}
 	
 	@Override

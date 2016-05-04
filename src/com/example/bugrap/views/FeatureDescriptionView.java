@@ -11,6 +11,7 @@ import com.example.bugrap.model.User;
 import com.example.bugrap.model.Version;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.shared.ui.label.ContentMode;
 
 /**
  * 
@@ -18,10 +19,12 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
  *
  */
 @SuppressWarnings("serial")
-public class FeatureDescriptionView extends FeatureDescriptionDesign implements View {
+public class FeatureDescriptionView extends FeatureDescriptionDesign {
 	
 	private ReportsController controller = new ReportsController();
 	private ExpandListener expandListener;
+	private UpdateTaskListener updateTaskListener;
+	private Set<Integer> currentTasks;
 	
 	/**
 	 * 
@@ -34,17 +37,59 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign implements 
 	
 	/**
 	 * 
+	 * @author nikolaigorokhov
+	 *
+	 */
+	public interface UpdateTaskListener {
+		public void onUpdate(List<Task> updatedTasks);
+	}
+	
+	/**
+	 * 
 	 */
 	public FeatureDescriptionView() {
+		summary.setContentMode(ContentMode.HTML);
+		
 		expandFeature.addClickListener((event) -> {
 			if(expandListener != null)
 				expandListener.onExpand();
 		});
 		
 		expandFeature.setVisible(false);
+		
+		updateButton.addClickListener(event -> {
+			if(currentTasks == null) {
+				return;
+			}
+			
+			// TODO store current values somethere
+			
+			Integer priority = (Integer) priorities.getValue();
+			Type type = (Type) types.getValue();
+			Status status = (Status) statuses.getValue();
+			User user = (User) users.getValue();
+			Version version = (Version) versions.getValue();
+			
+			List<Task> tasks = controller.getTasks(currentTasks);
+			tasks.forEach(task -> {
+				if(priority != null)
+					task.setPriority(priority);
+				if(type != null)
+					task.setType(type);
+				if(status != null)
+					task.setStatus(status);
+				if(user != null)
+					task.setUser(user);
+				if(version != null)
+					task.setVersion(version);
+			});
+			
+			if(updateTaskListener != null)
+				updateTaskListener.onUpdate(tasks);
+		});
 	}
 
-	private void setVersions(int projectId, Version selectedVersion) {
+	void setVersions(int projectId, Version selectedVersion) {
 		List<Version> items = controller.getProjectVersions(projectId);
 		
 		versions.removeAllItems();
@@ -53,7 +98,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign implements 
 		versions.setValue(selectedVersion);
 	}
 
-	private void setUsers(User selectedUser) {
+	void setUsers(User selectedUser) {
 		List<User> items = controller.getUsers();
 		
 		users.removeAllItems();
@@ -62,7 +107,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign implements 
 		users.setValue(selectedUser);
 	}
 
-	private void setStatuses(Status status) {
+	void setStatuses(Status status) {
 		List<Status> items = controller.getStatuses();
 		
 		statuses.removeAllItems();
@@ -71,7 +116,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign implements 
 		statuses.setValue(status);
 	}
 
-	private void setTypes(Type selectedType) {
+	void setTypes(Type selectedType) {
 		List<Type> items = controller.getTypes();
 		
 		types.removeAllItems();
@@ -80,7 +125,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign implements 
 		types.setValue(selectedType);
 	}
 
-	private void setPriorities(int selectedPriority) {
+	void setPriorities(int selectedPriority) {
 		priorities.removeAllItems();
 		
 		for(int i=5; i>0; --i) {
@@ -97,11 +142,13 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign implements 
 	public void setExpandListener(ExpandListener listener) {
 		this.expandListener = listener;
 	}
-
-	@Override
-	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
-		
+	
+	/**
+	 * 
+	 * @param listener
+	 */
+	public void setUpdateTasksListener(UpdateTaskListener listener) {
+		this.updateTaskListener = listener;
 	}
 
 	/**
@@ -130,15 +177,19 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign implements 
 		if(tasks.size() == 1) {
 			commentsList.setVisible(true);
 			setComments(avgTask.getComments());
-		} else
+		} else {
 			commentsList.setVisible(false);
+			setLogo("<b>"+tasks.size()+" reports selected</b> - Select a single report to view contents");
+		}
+		
+		currentTasks = tasks;
 	}
 
-	private void setComments(String comments) {
+	void setComments(String comments) {
 		commentsList.setValue(comments);
 	}
 
-	private void setLogo(String logo) {
+	void setLogo(String logo) {
 		summary.setValue(logo);
 	}
 }

@@ -31,6 +31,6 @@ public class BugrapUI extends UI {
 		ReportsController reportsController = new ReportsController(navigator);
 		
 		navigator.addView("", new MainView(reportsController));
-		navigator.addView("report", new ReportPageView());
+		navigator.addView("report", ReportPageView.class);
 	}
 }

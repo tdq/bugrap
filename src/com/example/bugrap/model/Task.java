@@ -1,11 +1,13 @@
 package com.example.bugrap.model;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author nikolaigorokhov
  *
  */
-public class Task {
+public class Task implements Serializable {
 	private int id;
 	private Version version;
 	private int priority;
@@ -142,5 +144,13 @@ public class Task {
 		this.project = project;
 	}
 	
+	@Override
+	public int hashCode() {
+		return id;
+	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof Task && ((Task)obj).getId() == id;
+	}
 }

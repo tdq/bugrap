@@ -13,51 +13,40 @@ import java.util.stream.Collectors;
  *
  */
 public class Model {
-	public static List<User> getUsers() {
-		return Arrays.asList(new User[] {
+	private static List<User> users = Arrays.asList(new User[] {
 			new User(1, "Nikolai Gorokhov"), 
 			new User(2, "Marc Manager"), 
 			new User(3, "King of Zimbabve"), 
 			new User(4, "Linus Torvalds")
 		});
-	}
 	
-	public static List<Project> getProjects() {
-		return Arrays.asList(new Project[] {
+	private static List<Project> projects = Arrays.asList(new Project[] {
 			new Project(1, "Project name that is rather long pellentesque habitant morbi"),
 			new Project(2, "Another, but very cool project")
 		});
-	}
 	
-	public static List<Version> getVersion() {
-		Map<Integer, Project> projects = getProjects().stream().collect(Collectors.toMap(Project::getId, Function.identity()));
-		
-		return Arrays.asList(new Version[] {
-			new Version(1, projects.get(1), "1.2.3-pre12"),
-			new Version(2, projects.get(1), "1.3"),
-			new Version(3, projects.get(2), "0.9.5")
+	private static List<Version> versions = Arrays.asList(new Version[] {
+			new Version(1, projects.get(0), "1.2.3-pre12"),
+			new Version(2, projects.get(0), "1.3"),
+			new Version(3, projects.get(1), "0.9.5")
 		});
-	}
 	
-	public static List<Type> getTypes() {
-		return Arrays.asList(new Type[] {
+	private static List<Type> types = Arrays.asList(new Type[] {
 			new Type(1, "Bug"),
 			new Type(2, "Feature")
 		});
-	}
 	
-	public static List<Status> getStatuses() {
-		return Arrays.asList(new Status[] {
+	private static List<Status> statuses = Arrays.asList(new Status[] {
 			new Status(1, "Open"),
 			new Status(2, "Closed"),
 			new Status(3, "Reopened"),
 			new Status(4, "Fixed"),
 			new Status(5, "Works for me")
 		});
-	}
 	
-	public static List<Task> getTasks() {
-		List<Task> tasks = new LinkedList<>();
+	private static List<Task> tasks = new LinkedList<>();
+	
+	static {
 		Map<Integer, Project> projects = getProjects().stream().collect(Collectors.toMap(Project::getId, Function.identity()));
 		Map<Integer, Version> versions = getVersion().stream().collect(Collectors.toMap(Version::getId, Function.identity()));
 		Map<Integer, Type> types = getTypes().stream().collect(Collectors.toMap(Type::getId, Function.identity()));
@@ -111,7 +100,29 @@ public class Model {
 		task8.setComments("Comment 1");
 		task8.setProject(projects.get(2));
 		tasks.add(task8);
-		
+	}
+	
+	public static List<User> getUsers() {
+		return users;
+	}
+	
+	public static List<Project> getProjects() {
+		return projects;
+	}
+	
+	public static List<Version> getVersion() {
+		return versions;
+	}
+	
+	public static List<Type> getTypes() {
+		return types;
+	}
+	
+	public static List<Status> getStatuses() {
+		return statuses;
+	}
+	
+	public static List<Task> getTasks() {
 		return tasks;
 	}
 }

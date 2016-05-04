@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import com.example.bugrap.components.UploadFileComponent;
+import com.example.bugrap.controllers.ReportsController;
+import com.example.bugrap.model.Task;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.ProgressBar;
@@ -12,8 +14,10 @@ import com.vaadin.ui.Upload.StartedEvent;
 
 public class ReportPageView extends ReportPageDesign implements View {
 	
+	private ReportsController controller = new ReportsController();
+	
 	public ReportPageView() {
-		breadcrums.setValue("Project name that is rather long pellentesque habitant morbi › 1.2.3-pre12");
+		//breadcrums.setValue("Project name that is rather long pellentesque habitant morbi › 1.2.3-pre12");
 		
 		attachmentButton.setButtonCaption("Attachment...");
 		attachmentButton.addStartedListener(event -> {
@@ -50,8 +54,20 @@ public class ReportPageView extends ReportPageDesign implements View {
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
-		
+		if(event.getParameters() != null && event.getParameters().isEmpty() == false) {
+			int taskId = Integer.parseInt(event.getParameters());
+			
+			Task task = controller.getTask(taskId);
+			featureDescription.setPriorities(task.getPriority());
+			featureDescription.setTypes(task.getType());
+			featureDescription.setStatuses(task.getStatus());
+			featureDescription.setUsers(task.getUser());
+			featureDescription.setVersions(task.getProject().getId(), task.getVersion());
+			featureDescription.setLogo(task.getSummary());
+			featureDescription.setComments(task.getComments());
+			
+			breadcrums.setValue(task.getProject().getName()+" › "+task.getVersion().getName());
+		}
 	}
 
 }
