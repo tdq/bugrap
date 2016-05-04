@@ -14,29 +14,16 @@ import com.example.bugrap.model.Type;
 import com.example.bugrap.model.User;
 import com.example.bugrap.model.Version;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.ui.UI;
 
 public class ReportsController {
-	
-	private Navigator navigator;
-
-	public ReportsController() {
-		
-	}
-	
-	/**
-	 * 
-	 * @param navigator
-	 */
-	public ReportsController(Navigator navigator) {
-		this.navigator = navigator;
-	}
 
 	/**
 	 * @param tasks 
 	 * 
 	 */
 	public void openTaskDescription(int taskId) {
-		navigator.navigateTo("report/"+taskId);
+		UI.getCurrent().getNavigator().navigateTo("report/"+taskId);
 	}
 
 	/**

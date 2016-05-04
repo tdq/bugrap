@@ -89,7 +89,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		});
 	}
 
-	void setVersions(int projectId, Version selectedVersion) {
+	private void setVersions(int projectId, Version selectedVersion) {
 		List<Version> items = controller.getProjectVersions(projectId);
 		
 		versions.removeAllItems();
@@ -98,7 +98,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		versions.setValue(selectedVersion);
 	}
 
-	void setUsers(User selectedUser) {
+	private void setUsers(User selectedUser) {
 		List<User> items = controller.getUsers();
 		
 		users.removeAllItems();
@@ -107,7 +107,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		users.setValue(selectedUser);
 	}
 
-	void setStatuses(Status status) {
+	private void setStatuses(Status status) {
 		List<Status> items = controller.getStatuses();
 		
 		statuses.removeAllItems();
@@ -116,7 +116,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		statuses.setValue(status);
 	}
 
-	void setTypes(Type selectedType) {
+	private void setTypes(Type selectedType) {
 		List<Type> items = controller.getTypes();
 		
 		types.removeAllItems();
@@ -125,7 +125,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		types.setValue(selectedType);
 	}
 
-	void setPriorities(int selectedPriority) {
+	private void setPriorities(int selectedPriority) {
 		priorities.removeAllItems();
 		
 		for(int i=5; i>0; --i) {
@@ -185,11 +185,11 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		currentTasks = tasks;
 	}
 
-	void setComments(String comments) {
+	private void setComments(String comments) {
 		commentsList.setValue(comments);
 	}
 
-	void setLogo(String logo) {
+	private void setLogo(String logo) {
 		summary.setValue(logo);
 	}
 }

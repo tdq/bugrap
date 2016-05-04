@@ -38,10 +38,15 @@ public class Model {
 	
 	private static List<Status> statuses = Arrays.asList(new Status[] {
 			new Status(1, "Open"),
-			new Status(2, "Closed"),
-			new Status(3, "Reopened"),
-			new Status(4, "Fixed"),
-			new Status(5, "Works for me")
+			new Status(2, "Fixed"),
+			new Status(3, "Invalid"),
+			new Status(4, "Won't fix"),
+			new Status(5, "Can't fix"),
+			new Status(6, "Duplicate"),
+			new Status(7, "Closed"),
+			new Status(8, "Reopened"),
+			new Status(9, "Works for me"),
+			new Status(10, "Needs more information")
 		});
 	
 	private static List<Task> tasks = new LinkedList<>();

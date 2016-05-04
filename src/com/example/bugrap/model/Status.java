@@ -6,7 +6,7 @@ public class Status implements Serializable {
 	private int id;
 	private String name;
 	
-	public static final int CLOSED = 2;
+	public static final int CLOSED = 7;
 	
 	public Status() {
 		

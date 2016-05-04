@@ -2,6 +2,8 @@ package com.example.bugrap.views;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.example.bugrap.components.UploadFileComponent;
 import com.example.bugrap.controllers.ReportsController;
@@ -58,14 +60,10 @@ public class ReportPageView extends ReportPageDesign implements View {
 			int taskId = Integer.parseInt(event.getParameters());
 			
 			Task task = controller.getTask(taskId);
-			featureDescription.setPriorities(task.getPriority());
-			featureDescription.setTypes(task.getType());
-			featureDescription.setStatuses(task.getStatus());
-			featureDescription.setUsers(task.getUser());
-			featureDescription.setVersions(task.getProject().getId(), task.getVersion());
-			featureDescription.setLogo(task.getSummary());
-			featureDescription.setComments(task.getComments());
-			
+			Set<Integer> tasks = new HashSet<>();
+			tasks.add(taskId);
+			featureDescription.setTasks(tasks, task.getProject().getId());
+
 			breadcrums.setValue(task.getProject().getName()+" › "+task.getVersion().getName());
 		}
 	}

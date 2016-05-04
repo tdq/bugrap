@@ -12,7 +12,6 @@ import com.example.bugrap.model.User;
 import com.example.bugrap.model.Version;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanContainer;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.navigator.View;
@@ -27,7 +26,7 @@ import com.vaadin.shared.MouseEventDetails.MouseButton;
 @SuppressWarnings("serial")
 public class MainView extends MainPageDesign implements View {
 	
-	private ReportsController controller;
+	private ReportsController controller = new ReportsController();
 	private int currentVersionId;
 	private Project currentProject;
 	private BeanContainer<Integer, Task> container = new BeanContainer<>(Task.class);
@@ -36,9 +35,7 @@ public class MainView extends MainPageDesign implements View {
 	 * 
 	 * @param controller
 	 */
-	public MainView(ReportsController controller) {
-		this.controller = controller;
-	
+	public MainView() {
 		projects.setImmediate(true);
 		
 		bugsTable.setSelectable(true);

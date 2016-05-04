@@ -17,7 +17,9 @@ import com.vaadin.ui.UI;
 @Theme("bugrap")
 @Widgetset("com.example.bugrap.components.BugrapWidgetset")
 public class BugrapUI extends UI {
-
+	
+	Navigator navigator;
+	
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = BugrapUI.class)
 	public static class Servlet extends VaadinServlet {
@@ -27,10 +29,10 @@ public class BugrapUI extends UI {
 	protected void init(VaadinRequest request) {
 		getPage().setTitle("BugRap");
 		
-		Navigator navigator = new Navigator(this, this);
-		ReportsController reportsController = new ReportsController(navigator);
+		navigator = new Navigator(this, this);
+		//ReportsController reportsController = new ReportsController(navigator);
 		
-		navigator.addView("", new MainView(reportsController));
+		navigator.addView("", MainView.class);
 		navigator.addView("report", ReportPageView.class);
 	}
 }
