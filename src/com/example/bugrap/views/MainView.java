@@ -1,22 +1,33 @@
 package com.example.bugrap.views;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.example.bugrap.components.FilterMenu.FilterMenuItem;
 import com.example.bugrap.controllers.ReportsController;
 import com.example.bugrap.model.Distribution;
 import com.example.bugrap.model.Project;
+import com.example.bugrap.model.Status;
 import com.example.bugrap.model.Task;
 import com.example.bugrap.model.User;
 import com.example.bugrap.model.Version;
+import com.vaadin.data.Container;
+import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanContainer;
+import com.vaadin.data.util.filter.Or;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
@@ -30,6 +41,48 @@ public class MainView extends MainPageDesign implements View {
 	private int currentVersionId;
 	private Project currentProject;
 	private BeanContainer<Integer, Task> container = new BeanContainer<>(Task.class);
+	
+	/**
+	 * 
+	 * @author nikolaigorokhov
+	 *
+	 */
+	private class StatusesFilter implements Container.Filter {
+		private List<Status> statuses;
+		private String propertyId;
+		
+		public StatusesFilter(String propertyId) {
+			this.propertyId = propertyId;
+		}
+		
+		/**
+		 * 
+		 * @param statuses
+		 */
+		public void setStatuses(List<Status> statuses) {
+			this.statuses = statuses;
+		}
+		
+		@Override
+		public boolean passesFilter(Object itemId, Item item) throws UnsupportedOperationException {
+			Property property = item.getItemProperty(propertyId);
+			
+			if(property == null || property.getType().equals(Status.class) == false)
+				return false;
+			
+			Status value = (Status) property.getValue();
+			
+			if(statuses.size() == 0)
+				return true;
+			
+			return statuses.stream().anyMatch(status -> status.equals(value));
+		}
+
+		@Override
+		public boolean appliesToProperty(Object propertyId) {
+			return propertyId != null && propertyId.equals(this.propertyId);
+		}
+	}
 	
 	/**
 	 * 
@@ -48,6 +101,8 @@ public class MainView extends MainPageDesign implements View {
 				controller.openTaskDescription((int) event.getItemId());
 			}
 		});
+		
+		setStatuses();
 		
 		bugsTable.addValueChangeListener(event -> {
 			Set<Integer> tasks = (Set<Integer>) bugsTable.getValue();
@@ -125,6 +180,37 @@ public class MainView extends MainPageDesign implements View {
 		});
 	}
 
+	private void setStatuses() {
+		List<Status> statuses = controller.getStatuses();
+		
+		FilterMenuItem openItem = statusFilterMenu.addItem("Open");
+		FilterMenuItem allItem = statusFilterMenu.addItem("All kinds");
+		FilterMenuItem customItem = statusFilterMenu.addItem("Custom");
+		
+		Filter openFilter = new SimpleStringFilter("status", "Open", true, true);
+		StatusesFilter statusesFilter = new StatusesFilter("status");
+		
+		openItem.addClickListener(event -> {
+			container.addContainerFilter(openFilter);
+			container.removeContainerFilter(statusesFilter);
+		});
+		
+		allItem.addClickListener(event -> {
+			container.removeContainerFilter(openFilter);
+			container.removeContainerFilter(statusesFilter);
+		});
+		
+		customItem.setValueChangeListener(() -> {
+			container.removeContainerFilter(openFilter);
+			List<Status> selectedStatuses = (List<Status>) customItem.getValue();
+			
+			statusesFilter.setStatuses(selectedStatuses);
+			container.addContainerFilter(statusesFilter);
+		});
+		
+		statuses.forEach(status -> customItem.addOption(status, status.getName()));
+	}
+
 	private Set<Integer> getSelectedTasks() {
 		Set<Integer> tasks = new HashSet<>();
 		
@@ -138,6 +224,19 @@ public class MainView extends MainPageDesign implements View {
 		
 		userButton.setCaption(user.getName());
 		setProjects(user.getId());
+		
+		FilterMenuItem meItem = userFilterMenu.addItem("Only me");
+		FilterMenuItem allItem = userFilterMenu.addItem("Everyone");
+		
+		Filter filter = new SimpleStringFilter("user", user.getName(), true, true);
+		
+		meItem.addClickListener(event -> {
+			container.addContainerFilter(filter);
+		});
+		
+		allItem.addClickListener(event -> { 
+			container.removeContainerFilter(filter);
+		});
 	}
 
 	private void setVersions(int projectId) {

@@ -39,6 +39,31 @@ $v-margin: 5px;
     font-size: 90%;
     width: 100%;
   }
+  
+  .filtermenu {
+  	font-size: 90%;
+  }
+  
+  .filtermenu .v-button {
+  	background: rgba(145,145,145,1);
+    background: -moz-linear-gradient(top, rgba(145,145,145,1) 0%, rgba(105,105,105,1) 100%) ;
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(145,145,145,1)), color-stop(100%, rgba(105,105,105,1)));
+    background: -webkit-linear-gradient(top, rgba(145,145,145,1) 0%, rgba(105,105,105,1) 100%);
+    background: -o-linear-gradient(top, rgba(145,145,145,1) 0%, rgba(105,105,105,1) 100%);
+    background: -ms-linear-gradient(top, rgba(145,145,145,1) 0%, rgba(105,105,105,1) 100%);
+    background: linear-gradient(to bottom, rgba(145,145,145,1) 0%, rgba(105,105,105,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#919191', endColorstr='#696969', GradientType=0 );
+  }
+
+	.filtermenu .v-button:first-child {
+		border-top-left-radius: 10px;
+	   	border-bottom-left-radius: 10px;
+	}
+	
+	.filtermenu .v-button:last-child {
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+	}
 
   bar item {
     color: #fff;

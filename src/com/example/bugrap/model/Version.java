@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author nikolaigorokhov
  *
  */
-public class Version implements Serializable {
+public class Version implements Serializable, Comparable<Version> {
 	private int id;
 	private Project project;
 	private String name;
@@ -59,5 +59,10 @@ public class Version implements Serializable {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public int compareTo(Version o) {
+		return this.name.compareTo(o.name);
 	}
 }

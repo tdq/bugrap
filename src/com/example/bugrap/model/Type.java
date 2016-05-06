@@ -2,7 +2,7 @@ package com.example.bugrap.model;
 
 import java.io.Serializable;
 
-public class Type implements Serializable {
+public class Type implements Serializable, Comparable<Type> {
 	private int id;
 	private String name;
 	
@@ -44,5 +44,10 @@ public class Type implements Serializable {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public int compareTo(Type o) {
+		return this.name.compareTo(o.name);
 	}
 }
