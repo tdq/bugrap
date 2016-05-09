@@ -89,6 +89,11 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		});
 	}
 
+	/**
+	 * 
+	 * @param projectId
+	 * @param selectedVersion
+	 */
 	private void setVersions(int projectId, Version selectedVersion) {
 		List<Version> items = controller.getProjectVersions(projectId);
 		
@@ -98,6 +103,10 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		versions.setValue(selectedVersion);
 	}
 
+	/**
+	 * 
+	 * @param selectedUser
+	 */
 	private void setUsers(User selectedUser) {
 		List<User> items = controller.getUsers();
 		
@@ -107,6 +116,10 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		users.setValue(selectedUser);
 	}
 
+	/**
+	 * 
+	 * @param status
+	 */
 	private void setStatuses(Status status) {
 		List<Status> items = controller.getStatuses();
 		
@@ -116,6 +129,10 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		statuses.setValue(status);
 	}
 
+	/**
+	 * 
+	 * @param selectedType
+	 */
 	private void setTypes(Type selectedType) {
 		List<Type> items = controller.getTypes();
 		
@@ -125,6 +142,10 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		types.setValue(selectedType);
 	}
 
+	/**
+	 * 
+	 * @param selectedPriority
+	 */
 	private void setPriorities(int selectedPriority) {
 		priorities.removeAllItems();
 		
@@ -141,6 +162,14 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 	 */
 	public void setExpandListener(ExpandListener listener) {
 		this.expandListener = listener;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public float getHeaderHeight() {
+		return 125f;
 	}
 	
 	/**
@@ -185,10 +214,18 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		currentTasks = tasks;
 	}
 
+	/**
+	 * 
+	 * @param comments
+	 */
 	private void setComments(String comments) {
 		commentsList.setValue(comments);
 	}
 
+	/**
+	 * 
+	 * @param logo
+	 */
 	private void setLogo(String logo) {
 		summary.setValue(logo);
 	}

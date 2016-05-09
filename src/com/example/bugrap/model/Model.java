@@ -64,19 +64,19 @@ public class Model {
 		task1.setProject(projects.get(1));
 		tasks.add(task1);
 		
-		Task task2 = new Task(2, versions.get(1), 3, types.get(1), "Menubar \"bottleneck\" usability problem", users.get(2), "30 mins ago", "2 hours ago");
+		Task task2 = new Task(2, versions.get(1), 2, types.get(1), "Menubar \"bottleneck\" usability problem", users.get(2), "30 mins ago", "2 hours ago");
 		task2.setStatus(statuses.get(1));
 		task2.setComments("Comment 1");
 		task2.setProject(projects.get(1));
 		tasks.add(task2);
 		
-		Task task3 = new Task(3, versions.get(1), 2, types.get(2), "Improve layout support", users.get(2), null, "6 days ago");
+		Task task3 = new Task(3, versions.get(1), 3, types.get(2), "Improve layout support", users.get(2), null, "6 days ago");
 		task3.setStatus(statuses.get(1));
 		task3.setComments("Comment 1");
 		task3.setProject(projects.get(1));
 		tasks.add(task3);
 		
-		Task task4 = new Task(4, versions.get(1), 2, types.get(1), "Fix chrome theme identifier", users.get(2), "2 weeks ago", "1 month ago");
+		Task task4 = new Task(4, versions.get(1), 4, types.get(1), "Fix chrome theme identifier", users.get(2), "2 weeks ago", "1 month ago");
 		task4.setStatus(statuses.get(1));
 		task4.setComments("Comment 1");
 		task4.setProject(projects.get(1));

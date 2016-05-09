@@ -1,6 +1,5 @@
 package com.example.bugrap.views;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,16 +17,12 @@ import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanContainer;
-import com.vaadin.data.util.filter.Or;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
@@ -130,11 +125,17 @@ public class MainView extends MainPageDesign implements View {
 				setDistribution(currentProject.getId());
 			});
 			
-			if(tasks.size() == 1)
+			if(tasks.size() == 1) {
 				featureDescription.setExpandListener(() -> controller.openTaskDescription(tasks.iterator().next()));
+				tableLayout.setSplitPosition(featureDescription.getHeaderHeight()+230, Unit.PIXELS, true);
+				tableLayout.setLocked(false);
+			} else {
+				tableLayout.setLocked(true);
+				tableLayout.setSplitPosition(featureDescription.getHeaderHeight(), Unit.PIXELS, true);
+			}
 
 			tableLayout.setSecondComponent(featureDescription);
-			tableLayout.setSplitPosition(50f);
+			
 		});
 		
 		bugsTable.addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
@@ -180,12 +181,16 @@ public class MainView extends MainPageDesign implements View {
 		});
 	}
 
+	/**
+	 * 
+	 */
 	private void setStatuses() {
 		List<Status> statuses = controller.getStatuses();
 		
 		FilterMenuItem openItem = statusFilterMenu.addItem("Open");
 		FilterMenuItem allItem = statusFilterMenu.addItem("All kinds");
 		FilterMenuItem customItem = statusFilterMenu.addItem("Custom");
+		customItem.setPopupCaption("Status");
 		
 		Filter openFilter = new SimpleStringFilter("status", "Open", true, true);
 		StatusesFilter statusesFilter = new StatusesFilter("status");
@@ -211,14 +216,9 @@ public class MainView extends MainPageDesign implements View {
 		statuses.forEach(status -> customItem.addOption(status, status.getName()));
 	}
 
-	private Set<Integer> getSelectedTasks() {
-		Set<Integer> tasks = new HashSet<>();
-		
-		bugsTable.getItemIds().forEach(id -> {if(bugsTable.isSelected(id)) tasks.add((Integer) id);});
-		
-		return tasks;
-	}
-
+	/**
+	 * 
+	 */
 	private void setUser() {
 		User user = controller.getCurrentUser();
 		
@@ -239,6 +239,10 @@ public class MainView extends MainPageDesign implements View {
 		});
 	}
 
+	/**
+	 * 
+	 * @param projectId
+	 */
 	private void setVersions(int projectId) {
 		List<Version> items = controller.getProjectVersions(projectId);
 		
@@ -256,6 +260,10 @@ public class MainView extends MainPageDesign implements View {
 		}
 	}
 
+	/**
+	 * 
+	 * @param projectId
+	 */
 	private void setDistribution(int projectId) {
 		Distribution distribution = controller.getDistribution(projectId);
 		
@@ -264,6 +272,10 @@ public class MainView extends MainPageDesign implements View {
 		distributionBar.setUnassignedAmount(distribution.getUnassignedAmount());
 	}
 
+	/**
+	 * 
+	 * @param userId
+	 */
 	private void setProjects(int userId) {
 		List<Project> items = controller.getProjects(userId);
 		
@@ -281,13 +293,17 @@ public class MainView extends MainPageDesign implements View {
 		}
 	}
 
+	/**
+	 * 
+	 * @param projectId
+	 * @param currentVersionId
+	 */
 	private void setBugTableDataSource(int projectId, int currentVersionId) {
 		List<Task> tasks = controller.getTasks(projectId, currentVersionId);
 		
 		container.setBeanIdProperty("id");
 		bugsTable.setContainerDataSource(container);
 		
-		//bugsTable.removeAllItems();
 		tableLayout.setSplitPosition(100f);
 		
 		if(currentVersionId == 0) {
@@ -295,11 +311,17 @@ public class MainView extends MainPageDesign implements View {
 			bugsTable.setColumnHeaders(new String[]{"Version", "Priority", "Type", "Summary", "Assigned to", "Last modified", "Reported"});
 		} else {
 			bugsTable.setVisibleColumns(new Object[]{"priority", "type", "summary", "user", "lastModified", "reported"});
-			bugsTable.setColumnHeaders(new String[]{"Priority", "Type", "Summary", "Assigned to", "Last modified", "Reported"});
+			bugsTable.setColumnHeaders(new String[]{"Priority", "Type", "Summary", "Assigned to", "Last modified", "Reported"});	
 		}
 		
 		container.removeAllItems();
 		container.addAll(tasks);
+		
+		if(currentVersionId == 0) {
+			container.sort(new Object[]{"version", "priority"}, new boolean[] {true, false}); 
+		} else {
+			container.sort(new Object[]{"priority"}, new boolean[] {false});
+		}
 	}
 
 	@Override

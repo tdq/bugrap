@@ -49,6 +49,12 @@ public class ReportPageView extends ReportPageDesign implements View {
 				@Override
 				public void write(int b) throws IOException {
 					// TODO
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			};
 		});

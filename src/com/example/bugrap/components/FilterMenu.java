@@ -26,6 +26,7 @@ public class FilterMenu extends CssLayout {
 		
 		public FilterMenuItem(String buttonCaption) {
 			super(buttonCaption);
+			this.setHeight("25px");
 		}
 
 		public void setPopupCaption(String caption) {
@@ -38,6 +39,7 @@ public class FilterMenu extends CssLayout {
 				this.setContent(layout);
 				
 				layout.addComponent(this.caption);
+				this.removeStyleName("disable-indicator");
 			}
 			
 			CheckBox checkBox = new CheckBox(caption);
@@ -73,10 +75,11 @@ public class FilterMenu extends CssLayout {
 	
 	public FilterMenuItem addItem(String buttonCaption) {
 		FilterMenuItem item = new FilterMenuItem(buttonCaption);
+		item.setStyleName("disable-indicator");
 		
 		item.addClickListener(event -> {
 			buttons.forEach(button -> button.removeStyleName("selected"));
-			item.setStyleName("selected");
+			item.setStyleName("selected", true);
 		});
 		
 		buttons.add(item);
