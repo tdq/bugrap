@@ -1,6 +1,5 @@
 package com.example.bugrap.views;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -92,7 +91,7 @@ public class MainView extends MainPageDesign implements View {
 		
 		bugsTable.addItemClickListener((event) -> {
 			if(event.getButton() == MouseButton.LEFT && event.isDoubleClick()) {
-				tableLayout.setSplitPosition(100f);
+				tableLayout.setSplitPosition(100f, Unit.PERCENTAGE);
 				controller.openTaskDescription((int) event.getItemId());
 			}
 		});
@@ -147,7 +146,7 @@ public class MainView extends MainPageDesign implements View {
 				if(tasks == null || tasks.isEmpty())
 					return;
 				
-				tableLayout.setSplitPosition(100f);
+				tableLayout.setSplitPosition(100f, Unit.PERCENTAGE);
 				controller.openTaskDescription(tasks.iterator().next());
 			}
 		});
@@ -304,7 +303,7 @@ public class MainView extends MainPageDesign implements View {
 		container.setBeanIdProperty("id");
 		bugsTable.setContainerDataSource(container);
 		
-		tableLayout.setSplitPosition(100f);
+		tableLayout.setSplitPosition(100f, Unit.PERCENTAGE);
 		
 		if(currentVersionId == 0) {
 			bugsTable.setVisibleColumns(new Object[]{"version", "priority", "type", "summary", "user", "lastModified", "reported"});
