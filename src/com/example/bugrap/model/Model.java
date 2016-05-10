@@ -7,12 +7,23 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.vaadin.incubator.bugrap.model.facade.FacadeUtil;
+import com.vaadin.incubator.bugrap.model.projects.ProjectVersion;
+import com.vaadin.incubator.bugrap.model.reports.Report;
+import com.vaadin.incubator.bugrap.model.reports.ReportPriority;
+import com.vaadin.incubator.bugrap.model.reports.ReportStatus;
+import com.vaadin.incubator.bugrap.model.reports.ReportType;
+import com.vaadin.incubator.bugrap.model.users.Reporter;
+import com.vaadin.incubator.bugrap.model.projects.Project;
+import com.vaadin.incubator.bugrap.model.reports.Comment;
+
 /**
  * 
  * @author nikolaigorokhov
  *
  */
 public class Model {
+	/*
 	private static List<User> users = Arrays.asList(new User[] {
 			new User(1, "Nikolai Gorokhov"), 
 			new User(2, "Marc Manager"), 
@@ -50,6 +61,8 @@ public class Model {
 		});
 	
 	private static List<Task> tasks = new LinkedList<>();
+	private static List<Comment> comments = new LinkedList<>();
+	private static List<Attachment> attachments = new LinkedList<>();
 	
 	static {
 		Map<Integer, Project> projects = getProjects().stream().collect(Collectors.toMap(Project::getId, Function.identity()));
@@ -106,28 +119,67 @@ public class Model {
 		task8.setProject(projects.get(2));
 		tasks.add(task8);
 	}
+	*/
 	
-	public static List<User> getUsers() {
-		return users;
+	static {
+		FacadeUtil.setFacade(FacadeUtil.FACADE_NAME);
+	}
+	
+	public static List<Reporter> getUsers() {
+		//return users;
+		return FacadeUtil.getReporters();
 	}
 	
 	public static List<Project> getProjects() {
-		return projects;
+		//return projects;
+		return FacadeUtil.getProjects();
 	}
 	
-	public static List<Version> getVersion() {
-		return versions;
+	public static List<ProjectVersion> getVersions(Project project) {
+		//return versions;
+		return FacadeUtil.getVersions(project);
 	}
 	
-	public static List<Type> getTypes() {
-		return types;
+	public static List<ReportType> getTypes() {
+		//return types;
+		return Arrays.asList(ReportType.values());
 	}
 	
-	public static List<Status> getStatuses() {
-		return statuses;
+	public static List<ReportStatus> getStatuses() {
+		//return statuses;
+		return Arrays.asList(ReportStatus.values());
 	}
 	
-	public static List<Task> getTasks() {
-		return tasks;
+	public static List<Report> getTasks(Project project) {
+		//return tasks;
+		final List<Report> reports = new LinkedList<>();
+		List<ProjectVersion> versions = FacadeUtil.getVersions(project);
+		
+		versions.forEach(version -> {
+			reports.addAll(FacadeUtil.getReportsForVersion(version));
+		});
+		
+		return reports;
+	}
+	
+	public static Report getTask(long taskId) {
+		return FacadeUtil.getReport(taskId);
+	}
+	
+	public static List<Comment> getComments(Report report) {
+		//return comments;
+		return FacadeUtil.getComments(report);
+	}
+	
+	public static void saveComment(Comment comment) {
+		FacadeUtil.store(comment);
+	}
+	
+	public static void saveReport(Report report) {
+		FacadeUtil.store(report);
+	}
+
+	public static List<ReportPriority> getPriorities() {
+		return Arrays.asList(ReportPriority.values());
 	}
 }

@@ -22,7 +22,7 @@
      </vaadin-button> 
     </vaadin-horizontal-layout> 
    </vaadin-horizontal-layout> 
-   <vaadin-horizontal-layout primary-style-name="v-horizontallayout" spacing="true" width-full="true" margin="true"> 
+   <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="bottom-line" spacing="true" width-full="true" margin="true"> 
     <vaadin-horizontal-layout primary-style-name="v-horizontallayout" :expand="3"> 
      <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="vertical-line" spacing="true"> 
       <vaadin-button icon="fonticon://FontAwesome/f188" style-name="borderless" plain-text="">
@@ -39,12 +39,12 @@
        123 
      </vaadin-label> 
     </vaadin-horizontal-layout> 
-    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" width-full="true" :middle="" :right="" :expand="2"> 
-     <vaadin-button icon="fonticon://FontAwesome/f002" style-name="borderless icon-only" plain-text="">
+    <vaadin-horizontal-layout primary-style-name="v-horizontallayout" style-name="search-panel" width-full="true" :middle="" :right="" :expand="2"> 
+     <vaadin-button icon="fonticon://FontAwesome/f002" style-name="borderless icon-only" plain-text="" _id="searchButton">
        Button 
      </vaadin-button> 
-     <vaadin-text-field style-name="borderless" width-full="true" value="Search reports..." :expand=""></vaadin-text-field> 
-     <vaadin-button style-name="borderless" plain-text="">
+     <vaadin-text-field input-prompt="Search reports..." style-name="borderless" width-full="true" _id="search" :expand=""></vaadin-text-field> 
+     <vaadin-button style-name="borderless" plain-text="" _id="clearSearch">
        X 
      </vaadin-button> 
     </vaadin-horizontal-layout> 

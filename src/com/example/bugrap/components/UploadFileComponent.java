@@ -23,6 +23,8 @@ public class UploadFileComponent extends HorizontalLayout implements FailedListe
 	private ProgressBar progressBar = new ProgressBar();
 	private Button closeButton = new Button("X");
 	private CloseListener closeListener;
+	private boolean canseled = false;
+	private Upload upload;
 	
 	/**
 	 * 
@@ -35,14 +37,12 @@ public class UploadFileComponent extends HorizontalLayout implements FailedListe
 
 	public UploadFileComponent(Upload upload, String name) {
 		fileName.setValue(name);
+		this.upload = upload;
+		
 		closeButton.setStyleName("borderless");
 		
 		closeButton.addClickListener(listener -> {
-			upload.interruptUpload();
-			this.removeComponent(progressBar);
-			
-			if(closeListener != null)
-				closeListener.onClose();
+			close();
 		});
 		
 		this.addComponent(fileName);
@@ -61,7 +61,10 @@ public class UploadFileComponent extends HorizontalLayout implements FailedListe
 	public void uploadFailed(FailedEvent event) {
 		this.removeComponent(progressBar);
 		
-		Notification.show("Upload error", event.toString(), Notification.Type.ERROR_MESSAGE);
+		if(!canseled) {
+			Notification.show("Upload error", event.toString(), Notification.Type.ERROR_MESSAGE);
+			event.getReason().printStackTrace();
+		}
 	}
 
 	@Override
@@ -76,5 +79,14 @@ public class UploadFileComponent extends HorizontalLayout implements FailedListe
 	
 	public void setCloseListener(CloseListener listener) {
 		this.closeListener = listener;
+	}
+
+	public void close() {
+		upload.interruptUpload();
+		canseled = true;
+		this.removeComponent(progressBar);
+		
+		if(closeListener != null)
+			closeListener.onClose();
 	}
 }

@@ -6,6 +6,7 @@ import com.vaadin.annotations.DesignRoot;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
@@ -24,6 +25,7 @@ import com.vaadin.ui.declarative.Design;
 public class ReportPageDesign extends VerticalLayout {
 	protected Label breadcrums;
 	protected FeatureDescriptionView featureDescription;
+	protected TextArea comment;
 	protected CssLayout uploadsContainer;
 	protected Button doneButton;
 	protected Upload attachmentButton;

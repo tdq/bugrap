@@ -29,6 +29,8 @@ $v-margin: 5px;
 // For more information, see: https://vaadin.com/book/-/page/themes.valo.html
 // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
 
+$v-gray-color: #dedede;
+
 @import "../valo/valo.scss";
 
 @mixin bugrap {
@@ -141,7 +143,16 @@ $v-margin: 5px;
   }
   
   .upload-area {
-  	background-color: #dedede;
+  	background-color: $v-gray-color;
   	border-radius: 5px;
+  }
+  
+  .search-panel {
+  	border: 1px solid $v-gray-color;
+  	border-radius: 10px;
+  }
+  
+  .bottom-line {
+  	border-bottom: 1px solid $v-gray-color;
   }
 }

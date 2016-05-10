@@ -8,6 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.declarative.Design;
@@ -27,6 +28,9 @@ public class MainPageDesign extends VerticalLayout {
 	protected ComboBox projects;
 	protected Button userButton;
 	protected Button logoutButton;
+	protected Button searchButton;
+	protected TextField search;
+	protected Button clearSearch;
 	protected NativeSelect versions;
 	protected DistributionBar distributionBar;
 	protected FilterMenu userFilterMenu;

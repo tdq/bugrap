@@ -9,6 +9,14 @@ import com.example.bugrap.model.Task;
 import com.example.bugrap.model.Type;
 import com.example.bugrap.model.User;
 import com.example.bugrap.model.Version;
+import com.vaadin.incubator.bugrap.model.projects.Project;
+import com.vaadin.incubator.bugrap.model.projects.ProjectVersion;
+import com.vaadin.incubator.bugrap.model.reports.Comment;
+import com.vaadin.incubator.bugrap.model.reports.Report;
+import com.vaadin.incubator.bugrap.model.reports.ReportPriority;
+import com.vaadin.incubator.bugrap.model.reports.ReportStatus;
+import com.vaadin.incubator.bugrap.model.reports.ReportType;
+import com.vaadin.incubator.bugrap.model.users.Reporter;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -24,7 +32,8 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 	private ReportsController controller = new ReportsController();
 	private ExpandListener expandListener;
 	private UpdateTaskListener updateTaskListener;
-	private Set<Integer> currentTasks;
+	private Set<Long> currentTasks;
+	private Project currentProject;
 	
 	/**
 	 * 
@@ -41,7 +50,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 	 *
 	 */
 	public interface UpdateTaskListener {
-		public void onUpdate(List<Task> updatedTasks);
+		public void onUpdate(List<Report> tasks);
 	}
 	
 	/**
@@ -64,13 +73,13 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 			
 			// TODO store current values somethere
 			
-			Integer priority = (Integer) priorities.getValue();
-			Type type = (Type) types.getValue();
-			Status status = (Status) statuses.getValue();
-			User user = (User) users.getValue();
-			Version version = (Version) versions.getValue();
+			ReportPriority priority = (ReportPriority) priorities.getValue();
+			ReportType type = (ReportType) types.getValue();
+			ReportStatus status = (ReportStatus) statuses.getValue();
+			Reporter user = (Reporter) users.getValue();
+			ProjectVersion version = (ProjectVersion) versions.getValue();
 			
-			List<Task> tasks = controller.getTasks(currentTasks);
+			List<Report> tasks = controller.getTasks(currentProject, currentTasks);
 			tasks.forEach(task -> {
 				if(priority != null)
 					task.setPriority(priority);
@@ -79,7 +88,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 				if(status != null)
 					task.setStatus(status);
 				if(user != null)
-					task.setUser(user);
+					task.setAssigned(user);
 				if(version != null)
 					task.setVersion(version);
 			});
@@ -88,14 +97,14 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 				updateTaskListener.onUpdate(tasks);
 		});
 	}
-
+	
 	/**
 	 * 
 	 * @param projectId
 	 * @param selectedVersion
 	 */
-	private void setVersions(int projectId, Version selectedVersion) {
-		List<Version> items = controller.getProjectVersions(projectId);
+	private void setVersions(ProjectVersion selectedVersion) {
+		List<ProjectVersion> items = controller.getProjectVersions(currentProject);
 		
 		versions.removeAllItems();
 		items.forEach(item -> versions.addItem(item));
@@ -107,8 +116,8 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 	 * 
 	 * @param selectedUser
 	 */
-	private void setUsers(User selectedUser) {
-		List<User> items = controller.getUsers();
+	private void setUsers(Reporter selectedUser) {
+		List<Reporter> items = controller.getUsers();
 		
 		users.removeAllItems();
 		items.forEach(item -> users.addItem(item));
@@ -120,8 +129,8 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 	 * 
 	 * @param status
 	 */
-	private void setStatuses(Status status) {
-		List<Status> items = controller.getStatuses();
+	private void setStatuses(ReportStatus status) {
+		List<ReportStatus> items = controller.getStatuses();
 		
 		statuses.removeAllItems();
 		items.forEach(item -> statuses.addItem(item));
@@ -133,8 +142,8 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 	 * 
 	 * @param selectedType
 	 */
-	private void setTypes(Type selectedType) {
-		List<Type> items = controller.getTypes();
+	private void setTypes(ReportType selectedType) {
+		List<ReportType> items = controller.getTypes();
 		
 		types.removeAllItems();
 		items.forEach(item -> types.addItem(item));
@@ -146,12 +155,12 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 	 * 
 	 * @param selectedPriority
 	 */
-	private void setPriorities(int selectedPriority) {
+	private void setPriorities(ReportPriority selectedPriority) {
+		List<ReportPriority> items = controller.getPriorities();
+		
 		priorities.removeAllItems();
 		
-		for(int i=5; i>0; --i) {
-			priorities.addItem(i);
-		}
+		items.forEach(item -> priorities.addItem(item));
 		
 		priorities.setValue(selectedPriority);
 	}
@@ -193,19 +202,20 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 	 * @param versionId 
 	 * @param projectId 
 	 */
-	public void setTasks(Set<Integer> tasks, int projectId) {
-		Task avgTask = controller.getAvgTask(tasks);
+	public void setTasks(Set<Long> tasks, Project project) {
+		Report avgTask = controller.getAvgTask(currentProject, tasks);
+		currentProject = project;
 		
 		setPriorities(avgTask.getPriority());
 		setTypes(avgTask.getType());
 		setStatuses(avgTask.getStatus());
-		setUsers(avgTask.getUser());
-		setVersions(projectId, avgTask.getVersion());
+		setUsers(avgTask.getAssigned());
+		setVersions(avgTask.getVersion());
 		setLogo(avgTask.getSummary());
 		
 		if(tasks.size() == 1) {
 			commentsList.setVisible(true);
-			setComments(avgTask.getComments());
+			setComments(controller.getComments(avgTask));
 		} else {
 			commentsList.setVisible(false);
 			setLogo("<b>"+tasks.size()+" reports selected</b> - Select a single report to view contents");
@@ -216,10 +226,10 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 
 	/**
 	 * 
-	 * @param comments
+	 * @param list
 	 */
-	private void setComments(String comments) {
-		commentsList.setValue(comments);
+	private void setComments(List<Comment> list) {
+		//commentsList.setValue(list);
 	}
 
 	/**

@@ -7,12 +7,19 @@ import java.util.stream.Collectors;
 
 import com.example.bugrap.model.Distribution;
 import com.example.bugrap.model.Model;
-import com.example.bugrap.model.Project;
 import com.example.bugrap.model.Status;
 import com.example.bugrap.model.Task;
 import com.example.bugrap.model.Type;
 import com.example.bugrap.model.User;
 import com.example.bugrap.model.Version;
+import com.vaadin.incubator.bugrap.model.projects.Project;
+import com.vaadin.incubator.bugrap.model.projects.ProjectVersion;
+import com.vaadin.incubator.bugrap.model.reports.Comment;
+import com.vaadin.incubator.bugrap.model.reports.Report;
+import com.vaadin.incubator.bugrap.model.reports.ReportPriority;
+import com.vaadin.incubator.bugrap.model.reports.ReportStatus;
+import com.vaadin.incubator.bugrap.model.reports.ReportType;
+import com.vaadin.incubator.bugrap.model.users.Reporter;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.UI;
 
@@ -22,7 +29,7 @@ public class ReportsController {
 	 * @param tasks 
 	 * 
 	 */
-	public void openTaskDescription(int taskId) {
+	public void openTaskDescription(Long taskId) {
 		UI.getCurrent().getNavigator().navigateTo("report/"+taskId);
 	}
 
@@ -31,10 +38,8 @@ public class ReportsController {
 	 * @param projectId
 	 * @return
 	 */
-	public List<Version> getProjectVersions(int projectId) {
-		return Model.getVersion().stream()
-				.filter(version -> version.getProject().getId() == projectId)
-				.collect(Collectors.toList());
+	public List<ProjectVersion> getProjectVersions(Project project) {
+		return Model.getVersions(project);
 	}
 
 	/**
@@ -42,8 +47,10 @@ public class ReportsController {
 	 * @param userId
 	 * @return
 	 */
-	public List<Project> getProjects(int userId) {
-		return Model.getProjects();
+	public List<Project> getProjects(long userId) {
+		return Model.getProjects().stream()
+				.filter(project -> project.getManager().getId() == userId)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -51,21 +58,20 @@ public class ReportsController {
 	 * @param projectId
 	 * @return
 	 */
-	public Distribution getDistribution(int projectId) {
+	public Distribution getDistribution(Project project) {
 		int closed = 0;
 		int notClosed = 0;
 		int unnasigned = 0;
 		
-		Iterator<Task> iter = Model.getTasks().stream().filter(task -> task.getProject().getId() == projectId).iterator();
-		while(iter.hasNext()) {
-			Task task = iter.next();
-			if(task.getStatus().getId() == Status.CLOSED) {
+		List<Report> tasks = Model.getTasks(project);
+		for(Report task : tasks) {
+			if(task.getStatus() == ReportStatus.CLOSED) {
 				++closed;
 			} else {
 				++notClosed;
 			}
 			
-			if(task.getUser() == null)
+			if(task.getAssigned() == null)
 				++unnasigned;
 		}
 		
@@ -78,9 +84,8 @@ public class ReportsController {
 	 * @param versionId 
 	 * @return
 	 */
-	public List<Task> getTasks(int projectId, int versionId) {
-		return Model.getTasks().stream()
-				.filter(task -> task.getProject().getId() == projectId)
+	public List<Report> getTasks(Project project, long versionId) {
+		return Model.getTasks(project).stream()
 				.filter(task -> task.getVersion().getId() == versionId || versionId == 0)
 				.collect(Collectors.toList());
 	}
@@ -89,8 +94,8 @@ public class ReportsController {
 	 * 
 	 * @return
 	 */
-	public User getCurrentUser() {
-		return Model.getUsers().stream().filter(user -> user.getId() == 1).findFirst().get();
+	public Reporter getCurrentUser() {
+		return Model.getUsers().stream().filter(user -> user.getId() == 2).findFirst().get();
 	}
 
 	public void logout() {
@@ -98,38 +103,42 @@ public class ReportsController {
 		
 	}
 
-	public Task getAvgTask(Set<Integer> tasks) {
-		Task res = null;
+	public Report getAvgTask(Project project, Set<Long> tasks) {
+		Report res = null;
 		
-		Iterator<Task> iter = Model.getTasks().stream().filter(task -> tasks.contains(task.getId())).iterator();
+		Iterator<Report> iter = Model.getTasks(project).stream().filter(task -> tasks.contains(task.getId())).iterator();
 		while(iter.hasNext()) {
-			Task task = iter.next();
+			Report task = iter.next();
 			
 			if(res == null) {
-				res = new Task(task.getId(), 
-								task.getVersion(), 
-								task.getPriority(), 
-								task.getType(), 
-								task.getSummary(), 
-								task.getUser(), 
-								task.getLastModified(), 
-								task.getReported());
-				res.setComments(task.getComments());
+				res = new Report();
+				res.setId(task.getId());
+				res.setAssigned(task.getAssigned());
+				res.setAuthor(task.getAuthor());
+				res.setConsistencyVersion(task.getConsistencyVersion());
+				res.setDescription(task.getDescription());
+				res.setOccursIn(task.getOccursIn());
+				res.setPriority(task.getPriority());
 				res.setProject(task.getProject());
+				res.setResolution(task.getResolution());
 				res.setStatus(task.getStatus());
+				res.setSummary(task.getSummary());
+				res.setTimestamp(task.getTimestamp());
+				res.setType(task.getType());
+				res.setVersion(task.getVersion());
 				continue;
 			} else {
 				res.setId(0);
 			}
 			
-			if(res.getPriority() != task.getPriority())
-				res.setPriority(0);
+			if(res.getPriority() != null && res.getPriority().equals(task.getPriority()) == false)
+				res.setPriority(null);
 			if(res.getType() != null && res.getType().equals(task.getType()) == false)
 				res.setType(null);
 			if(res.getStatus() != null && res.getStatus().equals(task.getStatus()) == false)
 				res.setStatus(null);
-			if(res.getUser() != null && res.getUser().equals(task.getUser()) == false)
-				res.setUser(null);
+			if(res.getAssigned() != null && res.getAssigned().equals(task.getAssigned()) == false)
+				res.setAssigned(null);
 			if(res.getVersion() != null && res.getVersion().equals(task.getVersion()) == false)
 				res.setVersion(null);
 		}
@@ -137,23 +146,31 @@ public class ReportsController {
 		return res;
 	}
 
-	public List<User> getUsers() {
+	public List<Reporter> getUsers() {
 		return Model.getUsers();
 	}
 
-	public List<Type> getTypes() {
+	public List<ReportType> getTypes() {
 		return Model.getTypes();
 	}
 
-	public List<Status> getStatuses() {
+	public List<ReportStatus> getStatuses() {
 		return Model.getStatuses();
 	}
 
-	public Task getTask(int taskId) {
-		return Model.getTasks().stream().filter(task -> task.getId() == taskId).findFirst().orElse(null);
+	public Report getTask(long taskId) {
+		return Model.getTask(taskId);
 	}
 
-	public List<Task> getTasks(Set<Integer> currentTasks) {
-		return Model.getTasks().stream().filter(task -> currentTasks.contains(task.getId())).collect(Collectors.toList());
+	public List<Report> getTasks(Project project, Set<Long> currentTasks) {
+		return Model.getTasks(project).stream().filter(task -> currentTasks.contains(task.getId())).collect(Collectors.toList());
+	}
+
+	public List<ReportPriority> getPriorities() {
+		return Model.getPriorities();
+	}
+
+	public List<Comment> getComments(Report task) {
+		return Model.getComments(task);
 	}
 }

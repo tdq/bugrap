@@ -3,24 +3,23 @@ package com.example.bugrap.views;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import com.example.bugrap.components.UploadFileComponent;
 import com.example.bugrap.controllers.ReportsController;
 import com.example.bugrap.model.Task;
+import com.vaadin.incubator.bugrap.model.reports.Report;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.ProgressBar;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.Upload.StartedEvent;
 
 public class ReportPageView extends ReportPageDesign implements View {
 	
 	private ReportsController controller = new ReportsController();
 	
 	public ReportPageView() {
-		//breadcrums.setValue("Project name that is rather long pellentesque habitant morbi › 1.2.3-pre12");
-		
 		attachmentButton.setButtonCaption("Attachment...");
 		attachmentButton.addStartedListener(event -> {
 			UploadFileComponent uploadComponent = new UploadFileComponent(attachmentButton, event.getFilename());
@@ -58,19 +57,36 @@ public class ReportPageView extends ReportPageDesign implements View {
 				}
 			};
 		});
+		
+		cancelButton.addClickListener(event -> {
+			Iterator<Component> components = uploadsContainer.iterator();
+			
+			while(components.hasNext()) {
+				UploadFileComponent component = (UploadFileComponent) components.next();
+				
+				component.close();
+			}
+		});
+		
+		doneButton.addClickListener(event -> {
+			// TODO store in the model
+			comment.clear();
+			uploadsContainer.removeAllComponents();
+			uploadsContainer.setVisible(false);
+		});
 	}
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
 		if(event.getParameters() != null && event.getParameters().isEmpty() == false) {
-			int taskId = Integer.parseInt(event.getParameters());
+			long taskId = Long.parseLong(event.getParameters());
 			
-			Task task = controller.getTask(taskId);
-			Set<Integer> tasks = new HashSet<>();
+			Report task = controller.getTask(taskId);
+			Set<Long> tasks = new HashSet<>();
 			tasks.add(taskId);
-			featureDescription.setTasks(tasks, task.getProject().getId());
+			featureDescription.setTasks(tasks, task.getProject());
 
-			breadcrums.setValue(task.getProject().getName()+" › "+task.getVersion().getName());
+			breadcrums.setValue(task.getProject().getName()+" › "+task.getVersion().getVersion());
 		}
 	}
 
