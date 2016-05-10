@@ -8,7 +8,6 @@ import java.util.Set;
 
 import com.example.bugrap.components.UploadFileComponent;
 import com.example.bugrap.controllers.ReportsController;
-import com.example.bugrap.model.Task;
 import com.vaadin.incubator.bugrap.model.reports.Report;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;

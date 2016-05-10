@@ -7,11 +7,6 @@ import java.util.stream.Collectors;
 
 import com.example.bugrap.model.Distribution;
 import com.example.bugrap.model.Model;
-import com.example.bugrap.model.Status;
-import com.example.bugrap.model.Task;
-import com.example.bugrap.model.Type;
-import com.example.bugrap.model.User;
-import com.example.bugrap.model.Version;
 import com.vaadin.incubator.bugrap.model.projects.Project;
 import com.vaadin.incubator.bugrap.model.projects.ProjectVersion;
 import com.vaadin.incubator.bugrap.model.reports.Comment;
@@ -172,5 +167,9 @@ public class ReportsController {
 
 	public List<Comment> getComments(Report task) {
 		return Model.getComments(task);
+	}
+
+	public void saveTask(Report task) {
+		Model.saveReport(task);
 	}
 }

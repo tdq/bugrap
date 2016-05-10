@@ -4,11 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.example.bugrap.controllers.ReportsController;
-import com.example.bugrap.model.Status;
-import com.example.bugrap.model.Task;
-import com.example.bugrap.model.Type;
-import com.example.bugrap.model.User;
-import com.example.bugrap.model.Version;
 import com.vaadin.incubator.bugrap.model.projects.Project;
 import com.vaadin.incubator.bugrap.model.projects.ProjectVersion;
 import com.vaadin.incubator.bugrap.model.reports.Comment;
@@ -17,8 +12,6 @@ import com.vaadin.incubator.bugrap.model.reports.ReportPriority;
 import com.vaadin.incubator.bugrap.model.reports.ReportStatus;
 import com.vaadin.incubator.bugrap.model.reports.ReportType;
 import com.vaadin.incubator.bugrap.model.users.Reporter;
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.label.ContentMode;
 
 /**
@@ -91,10 +84,16 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 					task.setAssigned(user);
 				if(version != null)
 					task.setVersion(version);
+				
+				controller.saveTask(task);
 			});
 			
 			if(updateTaskListener != null)
 				updateTaskListener.onUpdate(tasks);
+		});
+		
+		revertButton.addClickListener(event -> {
+			setTasks(currentTasks, currentProject);
 		});
 	}
 	
@@ -203,7 +202,7 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 	 * @param projectId 
 	 */
 	public void setTasks(Set<Long> tasks, Project project) {
-		Report avgTask = controller.getAvgTask(currentProject, tasks);
+		Report avgTask = controller.getAvgTask(project, tasks);
 		currentProject = project;
 		
 		setPriorities(avgTask.getPriority());
@@ -216,9 +215,11 @@ public class FeatureDescriptionView extends FeatureDescriptionDesign {
 		if(tasks.size() == 1) {
 			commentsList.setVisible(true);
 			setComments(controller.getComments(avgTask));
+			expandFeature.setVisible(true);
 		} else {
 			commentsList.setVisible(false);
 			setLogo("<b>"+tasks.size()+" reports selected</b> - Select a single report to view contents");
+			expandFeature.setVisible(false);
 		}
 		
 		currentTasks = tasks;

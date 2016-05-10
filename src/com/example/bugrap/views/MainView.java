@@ -1,20 +1,13 @@
 package com.example.bugrap.views;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import com.example.bugrap.components.FilterMenu.FilterMenuItem;
 import com.example.bugrap.controllers.ReportsController;
 import com.example.bugrap.model.Distribution;
-import com.example.bugrap.model.Status;
-import com.example.bugrap.model.Task;
-import com.example.bugrap.model.User;
-import com.example.bugrap.model.Version;
-import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.ShortcutAction;
@@ -100,7 +93,7 @@ public class MainView extends MainPageDesign implements View {
 			
 		});
 		
-		bugsTable.addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
+		bugsTable.addShortcutListener(new ShortcutListener("BugTableEnter", ShortcutAction.KeyCode.ENTER, null) {
 			
 			@Override
 			public void handleAction(Object sender, Object target) {
@@ -143,7 +136,8 @@ public class MainView extends MainPageDesign implements View {
 		});
 		
 		final FieldsFilter fieldsFilter = new FieldsFilter("summary");
-		search.addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
+		/*
+		search.addShortcutListener(new ShortcutListener("SearchEnter", ShortcutAction.KeyCode.ENTER, null) {
 			
 			@Override
 			public void handleAction(Object sender, Object target) {
@@ -155,7 +149,7 @@ public class MainView extends MainPageDesign implements View {
 				}
 			}
 		});
-		
+		*/
 		searchButton.addClickListener(event -> {
 			if(search.getValue().isEmpty() == false) {
 				fieldsFilter.setValue(search.getValue());
@@ -165,6 +159,7 @@ public class MainView extends MainPageDesign implements View {
 		
 		clearSearch.addClickListener(event -> {
 			container.removeContainerFilter(fieldsFilter);
+			search.clear();
 		});
 	}
 
@@ -194,7 +189,7 @@ public class MainView extends MainPageDesign implements View {
 		
 		customItem.setValueChangeListener(() -> {
 			container.removeContainerFilter(openFilter);
-			List<Status> selectedStatuses = (List<Status>) customItem.getValue();
+			List<ReportStatus> selectedStatuses = (List<ReportStatus>) customItem.getValue();
 			
 			statusesFilter.setStatuses(selectedStatuses);
 			container.addContainerFilter(statusesFilter);
@@ -215,7 +210,7 @@ public class MainView extends MainPageDesign implements View {
 		FilterMenuItem meItem = userFilterMenu.addItem("Only me");
 		FilterMenuItem allItem = userFilterMenu.addItem("Everyone");
 		
-		Filter filter = new SimpleStringFilter("user", user.getName(), true, true);
+		Filter filter = new SimpleStringFilter("assigned", user.getName(), true, true);
 		
 		meItem.addClickListener(event -> {
 			container.addContainerFilter(filter);
